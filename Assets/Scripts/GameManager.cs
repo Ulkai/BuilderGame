@@ -36,10 +36,11 @@ public class GameManager : MonoBehaviour {
                         editorBlockInstance.Place(socket);
 
                         if (Input.GetMouseButtonUp(0)) {
-                            BlockBase instance = Instantiate(editorBlockInstance);
-                            instance.GetComponentInChildren<Collider>().enabled = true;
-                            hitBlock.Attach(socket, instance.transform);
-                            blocks.Add(instance.transform);
+                            editorBlockInstance.GetComponentInChildren<Collider>().enabled = true;
+                            editorBlockInstance.Attach(socket, hitBlock);
+                            blocks.Add(editorBlockInstance.transform);
+
+                            InstantiateEditorBlockPrefab();
                         }
                     }
                 }
@@ -50,7 +51,7 @@ public class GameManager : MonoBehaviour {
     public void OnPlay() {
 
         for (int i = 0; i < blocks.Count; i++) {
-            blocks[i].GetComponent<Rigidbody>().isKinematic = playMode;
+            blocks[i].GetComponent<BlockBase>().OnPlay();
         }
 
         playMode = !playMode;
@@ -61,7 +62,14 @@ public class GameManager : MonoBehaviour {
     public void SetEditorBlock(BlockBase prefab) {
         if (editorBlockPrefab != prefab) {
             editorBlockPrefab = prefab;
-            editorBlockInstance = Instantiate(editorBlockPrefab, Vector3.zero, Quaternion.identity) as BlockBase;
+            if (editorBlockInstance) {
+                Destroy(editorBlockInstance.gameObject);
+            }
+            InstantiateEditorBlockPrefab();
         }
+    }
+
+    void InstantiateEditorBlockPrefab() {    
+        editorBlockInstance = Instantiate(editorBlockPrefab, Vector3.zero, Quaternion.identity) as BlockBase;
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public class BlockSolid : BlockBase {
 
-    List<Transform> sockets = new List<Transform>();
     Transform pivot;
 
 	// Use this for initialization
@@ -11,7 +10,7 @@ public class BlockSolid : BlockBase {
         foreach (Transform child in transform) {
             if (child.name == "Pivot") {
                 pivot = child.transform;
-            } else {
+            } else if (child.name.StartsWith("Socket")) {
                 sockets.Add(child.transform);
             }
         }
@@ -41,8 +40,13 @@ public class BlockSolid : BlockBase {
         transform.rotation = socket.rotation;
     }
     
-    public override void Attach(Transform socket, Transform target) {
-        sockets.Remove(socket);
-        target.GetComponent<FixedJoint>().connectedBody = GetComponent<Rigidbody>();
+    public override void Attach(Transform socket, BlockBase target) {
+        target.sockets.Remove(socket);
+        GetComponent<Joint>().connectedBody = target.GetComponent<Rigidbody>();
+    }
+
+    public override void OnPlay() {
+        base.OnPlay();
+        GetComponent<Rigidbody>().isKinematic = false;
     }
 }

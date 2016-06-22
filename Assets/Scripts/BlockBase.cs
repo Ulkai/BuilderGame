@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class BlockBase : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    public List<Transform> sockets = new List<Transform>();
+
+    // Use this for initialization
+    void Start () {
 	
 	}
 	
@@ -22,6 +24,9 @@ public class BlockBase : MonoBehaviour {
         transform.rotation = socket.rotation;
     }
 
-    public virtual void Attach(Transform socket, Transform target) {
+    public virtual void Attach(Transform socket, BlockBase target) {
+    }
+
+    public virtual void OnPlay() {
     }
 }

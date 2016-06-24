@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class BlockWheel : BlockBase {
-    
+public class BlockLeg : BlockBase {
+
     Transform pivot;
 
     public KeyCode forwardKey;
@@ -11,7 +11,7 @@ public class BlockWheel : BlockBase {
     public bool invertedDrive = false;
     public const float SQRT_2_HALF = 0.70710678118f;
 
-    HingeJoint hinge;
+    ConfigurableJoint configurableJoint;
 
     // Use this for initialization
     void Start() {
@@ -20,7 +20,7 @@ public class BlockWheel : BlockBase {
                 pivot = child.transform;
             }
         }
-        hinge = GetComponent<HingeJoint>();
+        configurableJoint = GetComponent<ConfigurableJoint>();
     }
 
     // Update is called once per frame
@@ -31,10 +31,13 @@ public class BlockWheel : BlockBase {
         if (invertedDrive) {
             moveForward = -moveForward;
         }
-
-        JointMotor motor = hinge.motor;
+        float t = Time.realtimeSinceStartup;
+        configurableJoint.targetPosition = new Vector3(0, Mathf.Sin(t), Mathf.Cos(t));
+/*
+        JointMotor motor = configurableJoint.motor;
         motor.targetVelocity = moveForward;
-        hinge.motor = motor;
+        configurableJoint.motor = motor; 
+        */
     }
 
     public override void Place(Transform socket) {
@@ -46,12 +49,12 @@ public class BlockWheel : BlockBase {
 
     public override void Attach(Transform socket, BlockBase target) {
         target.sockets.Remove(socket);
-        hinge.connectedBody = target.GetComponent<Rigidbody>();
+        configurableJoint.connectedBody = target.GetComponent<Rigidbody>();
     }
 
     public override void OnPlay() {
         base.OnPlay();
         GetComponent<Rigidbody>().isKinematic = false;
-        hinge.useMotor = true;
+//        configurableJoint.useMotor = true;
     }
 }

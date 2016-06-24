@@ -44,14 +44,13 @@ public class BlockWheel : BlockBase {
         invertedDrive = (forward.z > SQRT_2_HALF);
     }
 
-    public override void Attach(Transform socket, BlockBase target) {
-        target.sockets.Remove(socket);
+    public override void Attach(BlockBase target) {
         hinge.connectedBody = target.GetComponent<Rigidbody>();
     }
 
-    public override void OnPlay() {
-        base.OnPlay();
-        GetComponent<Rigidbody>().isKinematic = false;
-        hinge.useMotor = true;
+    public override void OnPlay(bool enable) {
+        base.OnPlay(enable);
+        GetComponent<Rigidbody>().isKinematic = !enable;
+        hinge.useMotor = enable;
     }
 }

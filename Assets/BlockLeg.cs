@@ -47,14 +47,13 @@ public class BlockLeg : BlockBase {
         invertedDrive = (forward.z > SQRT_2_HALF);
     }
 
-    public override void Attach(Transform socket, BlockBase target) {
-        target.sockets.Remove(socket);
+    public override void Attach(BlockBase target) {
         configurableJoint.connectedBody = target.GetComponent<Rigidbody>();
     }
 
-    public override void OnPlay() {
-        base.OnPlay();
-        GetComponent<Rigidbody>().isKinematic = false;
+    public override void OnPlay(bool enable) {
+        base.OnPlay(enable);
+        GetComponent<Rigidbody>().isKinematic = !enable;
 //        configurableJoint.useMotor = true;
     }
 }

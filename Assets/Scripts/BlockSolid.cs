@@ -40,13 +40,12 @@ public class BlockSolid : BlockBase {
         transform.rotation = socket.rotation;
     }
     
-    public override void Attach(Transform socket, BlockBase target) {
-        target.sockets.Remove(socket);
+    public override void Attach(BlockBase target) {
         GetComponent<Joint>().connectedBody = target.GetComponent<Rigidbody>();
     }
 
-    public override void OnPlay() {
-        base.OnPlay();
-        GetComponent<Rigidbody>().isKinematic = false;
+    public override void OnPlay(bool enable) {
+        base.OnPlay(enable);
+        GetComponent<Rigidbody>().isKinematic = !enable;
     }
 }

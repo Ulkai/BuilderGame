@@ -24,9 +24,9 @@ public class BlockBase : MonoBehaviour {
         transform.rotation = socket.rotation;
     }
 
-    public virtual void Attach(Transform socket, BlockBase target) {
+    public virtual void Attach(BlockBase target) {
     }
 
-    public virtual void OnPlay() {
+    public virtual void OnPlay(bool enable) {
     }
 }
